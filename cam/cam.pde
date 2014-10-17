@@ -17,10 +17,11 @@ void setup(){
   minim = new Minim(this); //define or create what minim is before the zone is established
   zone = new Zone(100,100,440,280);
   video = new Capture(this,width,height,30);
+  video.start();
   prevFrame = createImage(video.width, video.height,RGB);
   stroke(0,0,255);
   
-  
+    
 }
 
 void draw(){
@@ -66,63 +67,4 @@ void draw(){
   }
   zone.show();*/  
   zone.check();
-}
-
-class Zone {  
-  
- 
-  AudioPlayer player;
-  int x, y,width,height; 
-  
-  float threshold = 12;
-  
-  
-  Zone (int x, int y, int w, int h) {  
-    player = minim.loadFile("camPDE.mp3");// 
-    this.x = x;
-    this.y = y;
-    this.width = w;
-    this.height = h;
-  } 
-  void show(){
-    noFill();
-    rect(x,y,width,height);
-  }
-  
-  // look at change of pixel data in the zone
-  void check(){
-    float total = 0; 
-    float average = 0;
-    // Begin loop to walk through every pixel
-    for (int x = this.x; x < this.width; x ++ ) {
-      for (int y = this.y; y < this.height; y ++ ) {
-       
-        int loc = x + y*video.width;            // Step 1, what is the 1D pixel location
-        color current = video.pixels[loc];      // Step 2, what is the current color
-        color previous = prevFrame.pixels[loc]; // Step 3, what is the previous color
-       
-        // Step 4, compare colors (previous vs. current)
-        float r1 = red(current); float g1 = green(current); float b1 = blue(current);
-        float r2 = red(previous); float g2 = green(previous); float b2 = blue(previous);
-        float diff = dist(r1,g1,b1,r2,g2,b2);
-        
-        total = total + diff;
-        
-     
-        }
-    }
-   
-    average = total / (this.width * this.height);
-   
-   
-    
-    
-    if (average > this.threshold) {
-        // If motion, display show block 
-        this.show();
-        this.player.rewind(); //rewind before playing to set the track back 
-        this.player.play();  // play track all the way through
-        
-    }
-  } // end check()
-} // end Zone
+}  
