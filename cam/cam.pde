@@ -9,18 +9,37 @@ Capture video;
 
 PImage prevFrame;
 
-Zone zone;
+//float[] jurts = {130.81,155.56,185};  
+float[] jurts = {130.81,0,0};  
+Zone[] zones = new Zone[jurts.length];
 
 
-void setup(){
-  size(640,480);
+void setup() {
+  int screen_width = 640;
+  int screen_height = 480;
+  size(screen_width, screen_height);
   minim = new Minim(this); //define or create what minim is before the zone is established
-  zone = new Zone(100,100,440,280);
+  //zone = new Zone(100,100,440,280);
   video = new Capture(this,width,height,30);
   video.start();
   prevFrame = createImage(video.width, video.height,RGB);
   stroke(0,0,255);
   
+  for(int i = 0; i < jurts.length; i ++){
+    int zone_width = screen_width / jurts.length;
+    int zone_height = screen_height;
+    int zone_x = zone_width * i;
+    int zone_y = 0;
+    println("x: " + zone_x);
+    println("y: " + zone_y);
+    println("w: " + zone_width);
+    println("h: " + zone_height);
+    println();
+    zones[i] = new Zone(zone_x, zone_y, zone_width, zone_height, jurts[i]);  
+}
+  for(int i = 0; i<zones.length; i ++){
+    zones[i].check();
+  }
     
 }
 
@@ -45,26 +64,10 @@ void draw(){
     }
   }
   updatePixels();
- 
- 
-  // verticle lines 
- /* for(int x = 64; x < width; x += 64){
-  
-   line(x,0,x,video.height);
-  }  
-  
-  for(int y = 0; y < height; y += 48){
-     // line();
-    }
-  */
 
-
-  //Zone draws  
-
-  /*zone.x+=3;
-  if (zone.x > width){
-    zone.x = -zone.width;
+  for(int i= 0; i<zones.length; i ++){
+    zones[i].check();
   }
-  zone.show();*/  
-  zone.check();
+
+
 }  

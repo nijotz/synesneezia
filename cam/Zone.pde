@@ -3,8 +3,8 @@ class Zone {
   //AudioPlayer player;
   int x, y,width,height; 
   float threshold = 12;
-  
-  Zone (int x, int y, int w, int h, String note) {  
+  float note;
+  Zone (int x, int y, int w, int h, float note) {  
     // use the getLineOut method of the Minim object to get an AudioOutput object
     player = minim.getLineOut();
     
@@ -40,11 +40,12 @@ class Zone {
   void check(){
     float total = 0; 
     float average = 0;
+    
     // Begin loop to walk through every pixel
     for (int x = this.x; x < this.width; x ++ ) {
       for (int y = this.y; y < this.height; y ++ ) {
        
-        int loc = x + y*video.width;            // Step 1, what is the 1D pixel location
+        int loc = x + (y * video.width);        // Step 1, what is the 1D pixel location
         color current = video.pixels[loc];      // Step 2, what is the current color
         color previous = prevFrame.pixels[loc]; // Step 3, what is the previous color
        
@@ -54,7 +55,7 @@ class Zone {
         float diff = dist(r1,g1,b1,r2,g2,b2);
         
         total = total + diff;
-        }
+      }
     }
    
     average = total / (this.width * this.height);
@@ -62,14 +63,11 @@ class Zone {
     if (average > this.threshold) {
         // If motion, display show block 
         this.show();
-        //this.player.rewind(); //rewind before playing to set the track back 
-        this.play();  // play track all the way through
-        
+        this.play();   
     }
   } // end check()
+  
   void play(){
-    this.player.playNote("G5");
-   
-    
+    this.player.playNote(this.note);
   }
 } // end Zone
